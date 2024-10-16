@@ -1,0 +1,69 @@
+Step 1: Load Docker Images into the Kind Cluster
+Rebuild and load the backend Docker image:
+
+bash
+Copy code
+cd ~/code/k8s-reverse-proxy/backend
+docker build -t my-backend:1.0 .
+kind load docker-image my-backend:1.0 --name kind
+Rebuild and load the Nginx Docker image:
+
+bash
+Copy code
+cd ~/code/k8s-reverse-proxy/nginx
+docker build -t my-nginx-proxy:1.0 .
+kind load docker-image my-nginx-proxy:1.0 --name kind
+Step 2: Apply Kubernetes Manifests
+Navigate to your Kubernetes manifests directory:
+
+bash
+Copy code
+cd ~/code/k8s-reverse-proxy/k8s
+Apply the backend manifests:
+
+bash
+Copy code
+kubectl apply -f backend-deployment.yaml
+kubectl apply -f backend-service.yaml
+Apply the Nginx manifests:
+
+bash
+Copy code
+kubectl apply -f nginx-deployment.yaml
+kubectl apply -f nginx-service.yaml
+Step 3: Access the Application
+Forward the Nginx service port to your local machine:
+
+bash
+Copy code
+kubectl port-forward svc/nginx 8080:80
+Access the application in your browser:
+
+Open http://localhost:8080/api to see the JSON response from the backend.
+
+Summary of Commands
+Load Docker images into the Kind cluster:
+
+bash
+Copy code
+cd ~/code/k8s-reverse-proxy/backend
+docker build -t my-backend:1.0 .
+kind load docker-image my-backend:1.0 --name kind
+
+cd ~/code/k8s-reverse-proxy/nginx
+docker build -t my-nginx-proxy:1.0 .
+kind load docker-image my-nginx-proxy:1.0 --name kind
+Apply Kubernetes manifests:
+
+bash
+Copy code
+cd ~/code/k8s-reverse-proxy/k8s
+kubectl apply -f backend-deployment.yaml
+kubectl apply -f backend-service.yaml
+kubectl apply -f nginx-deployment.yaml
+kubectl apply -f nginx-service.yaml
+Port forward to access the application:
+
+bash
+Copy code
+kubectl port-forward svc/nginx 8080:80
